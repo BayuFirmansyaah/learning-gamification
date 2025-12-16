@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Pembelajaran Matematika 3D</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Three.js Canvas -->
+    <canvas id="canvas3d"></canvas>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="overlay-screen game-start">
+        <div class="game-particles"></div>
+        <div class="screen-content game-content">
+            <!-- Logo/Icon -->
+            <div class="game-logo">
+                <span class="logo-icon">🏙️</span>
+                <span class="logo-math">∑</span>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="game-title">
+                <span class="title-line">MATH</span>
+                <span class="title-line accent">CITY</span>
+            </h1>
+            <p class="game-subtitle">Petualangan Matematika 3D</p>
+            
+            <!-- Features -->
+            <div class="game-features">
+                <div class="feature-item">
+                    <span class="feature-icon">🏢</span>
+                    <span>12 Checkpoint</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📚</span>
+                    <span>Video Interaktif</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎮</span>
+                    <span>Eksplorasi Bebas</span>
+                </div>
+            </div>
+            
+            <!-- Start Button -->
+            <button id="startButton" class="btn-game-start">
+                <span class="btn-text">MULAI PETUALANGAN</span>
+                <span class="btn-icon-play">▶</span>
+            </button>
+            
+            <!-- Controls -->
+            <div class="controls-info game-controls">
+                <div class="control-group">
+                    <div class="control-item">
+                        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+                        <span>Bergerak</span>
+                    </div>
+                    <div class="control-item">
+                        <kbd>SHIFT</kbd>
+                        <span>Sprint</span>
+                    </div>
+                    <div class="control-item">
+                        <kbd>Q</kbd><kbd>E</kbd>
+                        <span>Putar Kamera</span>
+                    </div>
+                    <div class="control-item">
+                        <kbd>M</kbd>
+                        <span>Minimap</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <p class="game-footer">Klik tombol untuk memulai • Gunakan mouse untuk melihat sekeliling</p>
+        </div>
+    </div>
+
+    <!-- Learning Popup -->
+    <div id="learningPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <!-- Header -->
+            <div class="popup-header">
+                <div class="popup-icon">📚</div>
+                <div class="popup-title-section">
+                    <span class="popup-badge">MATERI PEMBELAJARAN</span>
+                    <h2 id="popupTitle">Judul Materi</h2>
+                </div>
+            </div>
+            
+            <!-- Video Container (16:9 aspect ratio like YouTube) -->
+            <div class="video-wrapper">
+                <div id="videoContainer" class="video-container">
+                    <!-- YouTube iframe will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="popup-info">
+                <div class="info-item">
+                    <span class="info-icon">🎯</span>
+                    <span class="info-text">Pelajari materi dengan seksama</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⏱️</span>
+                    <span class="info-text" id="watchTimer">Tonton video hingga selesai</span>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="video-progress-bar">
+                <div id="videoProgressFill" class="progress-fill"></div>
+            </div>
+            
+            <!-- Watch Progress Message -->
+            <div id="watchProgress" class="watch-progress">
+                <p>⏳ Tonton video hingga selesai untuk melanjutkan</p>
+            </div>
+            
+            <!-- Action Button -->
+            <div class="popup-actions">
+                <button id="continueButton" class="btn-primary btn-continue" disabled>
+                    <span class="btn-icon">▶</span>
+                    <span>Lanjutkan Pelajaran</span>
+                </button>
+            </div>
+            
+            <!-- Checkpoint Progress -->
+            <div class="checkpoint-progress">
+                <span id="popupCheckpointInfo">Checkpoint 1 dari 12</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress HUD -->
+    <div id="progressHUD" class="hud">
+        <div class="hud-item">
+            <span>Checkpoint:</span>
+            <span id="checkpointCount">0/4</span>
+        </div>
+    </div>
+
+    <!-- Crosshair -->
+    <div id="crosshair" style="display: none;"></div>
+
+    <!-- Import Maps for Three.js -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- Main Application -->
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
