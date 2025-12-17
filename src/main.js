@@ -7,6 +7,7 @@ import buildingsManager from './buildings.js';
 import checkpointSystem from './checkpoints.js';
 import trainSystem from './train.js';
 import minimap from './minimap.js';
+import { audioSystem } from './audio.js';
 // Disabled for performance:
 // import dayNightCycle from './daynight.js';
 // import collectibleSystem from './collectibles.js';
@@ -73,6 +74,9 @@ class App {
 
             // Initialize minimap
             minimap.init();
+
+            // Initialize audio system (will fully activate on user interaction)
+            audioSystem.init();
 
             // Gamification disabled for performance:
             // const lights = sceneManager.getLights();

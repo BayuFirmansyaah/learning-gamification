@@ -111,36 +111,22 @@ body {
 
 /* Game Logo */
 .game-logo {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
-.logo-icon {
+.game-logo i {
     font-size: 5rem;
-    display: block;
+    color: #4CAF50;
     animation: logoFloat 3s ease-in-out infinite;
     filter: drop-shadow(0 10px 30px rgba(76, 175, 80, 0.4));
-}
-
-.logo-math {
-    position: absolute;
-    top: -10px;
-    right: -20px;
-    font-size: 2rem;
-    color: #ffd700;
-    animation: logoPulse 2s ease-in-out infinite;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
 }
 
 @keyframes logoFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
-}
-
-@keyframes logoPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.8; }
 }
 
 /* Game Title */
@@ -209,8 +195,9 @@ body {
     transform: translateY(-5px);
 }
 
-.feature-icon {
+.feature-item .feature-icon {
     font-size: 2rem;
+    color: #4CAF50;
 }
 
 .feature-item span:last-child {
@@ -396,7 +383,7 @@ body {
 }
 
 .popup-icon {
-    font-size: 3rem;
+    font-size: 2rem;
     background: linear-gradient(135deg, #4CAF50, #2E7D32);
     width: 70px;
     height: 70px;
@@ -405,6 +392,11 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    color: white;
+}
+
+.popup-icon i {
+    color: white;
 }
 
 .popup-title-section {
@@ -474,6 +466,23 @@ body {
 
 .info-icon {
     font-size: 1.2rem;
+    color: #4CAF50;
+    width: 24px;
+    text-align: center;
+}
+
+.info-icon i {
+    color: #4CAF50;
+}
+
+/* Watch Progress */
+.watch-progress p i {
+    margin-right: 8px;
+    color: #888;
+}
+
+.watch-progress.completed p i {
+    color: #4CAF50;
 }
 
 /* Video Progress Bar */
@@ -543,7 +552,12 @@ body {
     box-shadow: none;
 }
 
-.btn-icon {
+.btn-continue .btn-icon {
+    font-size: 1rem;
+    margin-right: 5px;
+}
+
+.btn-continue i {
     font-size: 1rem;
 }
 
@@ -1021,5 +1035,263 @@ body {
 .achievement-desc {
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
+}
+
+/* ========== Dialog System ========== */
+#dialogContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 80px;
+    z-index: 1500;
+    background: rgba(0, 0, 0, 0.4);
+    animation: dialogFadeIn 0.3s ease-out;
+}
+
+@keyframes dialogFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.dialog-box {
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    padding: 25px 30px;
+    max-width: 550px;
+    width: 90%;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(76, 175, 80, 0.3),
+        0 0 40px rgba(76, 175, 80, 0.1);
+    animation: dialogSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dialogSlideIn {
+    from { 
+        transform: translateY(50px) scale(0.9);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.npc-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    animation: avatarPulse 2s ease-in-out infinite;
+}
+
+.npc-avatar i {
+    color: white;
+}
+
+@keyframes avatarPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.npc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.npc-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.npc-role {
+    font-size: 0.9rem;
+    color: #4CAF50;
+}
+
+.dialog-content {
+    min-height: 80px;
+    margin-bottom: 20px;
+}
+
+#dialogText {
+    color: white;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    min-height: 50px;
+}
+
+.dialog-typing {
+    display: flex;
+    gap: 5px;
+    padding: 10px 0;
+}
+
+.dialog-typing span {
+    width: 10px;
+    height: 10px;
+    background: #4CAF50;
+    border-radius: 50%;
+    animation: typingBounce 1.4s ease-in-out infinite;
+}
+
+.dialog-typing span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dialog-typing span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+.dialog-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.dialog-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dialog-btn-primary {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.dialog-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+}
+
+.dialog-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dialog-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.dialog-hint {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+}
+
+.dialog-hint kbd {
+    display: inline-block;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    font-family: inherit;
+    margin: 0 3px;
+}
+
+/* Proximity Indicator */
+#proximityIndicator {
+    position: fixed;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    z-index: 800;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    pointer-events: none;
+}
+
+#proximityIndicator.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.proximity-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(76, 175, 80, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.proximity-icon {
+    font-size: 1.5rem;
+    animation: proximityBounce 1s ease-in-out infinite;
+}
+
+@keyframes proximityBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.proximity-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#proximityNpcName {
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.proximity-hint {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.proximity-hint kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: bold;
+    margin: 0 2px;
 }
 

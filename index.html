@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Pembelajaran Matematika 3D</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <!-- Three.js Canvas -->
@@ -16,8 +18,7 @@
         <div class="screen-content game-content">
             <!-- Logo/Icon -->
             <div class="game-logo">
-                <span class="logo-icon">🏙️</span>
-                <span class="logo-math">∑</span>
+                <i class="fas fa-graduation-cap"></i>
             </div>
             
             <!-- Title -->
@@ -30,23 +31,23 @@
             <!-- Features -->
             <div class="game-features">
                 <div class="feature-item">
-                    <span class="feature-icon">🏢</span>
+                    <i class="fas fa-map-marker-alt feature-icon"></i>
                     <span>12 Checkpoint</span>
                 </div>
                 <div class="feature-item">
-                    <span class="feature-icon">📚</span>
+                    <i class="fas fa-video feature-icon"></i>
                     <span>Video Interaktif</span>
                 </div>
                 <div class="feature-item">
-                    <span class="feature-icon">🎮</span>
+                    <i class="fas fa-gamepad feature-icon"></i>
                     <span>Eksplorasi Bebas</span>
                 </div>
             </div>
             
             <!-- Start Button -->
             <button id="startButton" class="btn-game-start">
+                <i class="fas fa-play"></i>
                 <span class="btn-text">MULAI PETUALANGAN</span>
-                <span class="btn-icon-play">▶</span>
             </button>
             
             <!-- Controls -->
@@ -61,8 +62,12 @@
                         <span>Sprint</span>
                     </div>
                     <div class="control-item">
-                        <kbd>Q</kbd><kbd>E</kbd>
+                        <kbd>Q</kbd><kbd>R</kbd>
                         <span>Putar Kamera</span>
+                    </div>
+                    <div class="control-item">
+                        <kbd>E</kbd>
+                        <span>Bicara NPC</span>
                     </div>
                     <div class="control-item">
                         <kbd>M</kbd>
@@ -81,7 +86,7 @@
         <div class="popup-content">
             <!-- Header -->
             <div class="popup-header">
-                <div class="popup-icon">📚</div>
+                <div class="popup-icon"><i class="fas fa-book-open"></i></div>
                 <div class="popup-title-section">
                     <span class="popup-badge">MATERI PEMBELAJARAN</span>
                     <h2 id="popupTitle">Judul Materi</h2>
@@ -98,11 +103,11 @@
             <!-- Info Section -->
             <div class="popup-info">
                 <div class="info-item">
-                    <span class="info-icon">🎯</span>
+                    <span class="info-icon"><i class="fas fa-bullseye"></i></span>
                     <span class="info-text">Pelajari materi dengan seksama</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-icon">⏱️</span>
+                    <span class="info-icon"><i class="fas fa-clock"></i></span>
                     <span class="info-text" id="watchTimer">Tonton video hingga selesai</span>
                 </div>
             </div>
@@ -114,13 +119,13 @@
             
             <!-- Watch Progress Message -->
             <div id="watchProgress" class="watch-progress">
-                <p>⏳ Tonton video hingga selesai untuk melanjutkan</p>
+                <p><i class="fas fa-hourglass-half"></i> Tonton video hingga selesai untuk melanjutkan</p>
             </div>
             
             <!-- Action Button -->
             <div class="popup-actions">
                 <button id="continueButton" class="btn-primary btn-continue" disabled>
-                    <span class="btn-icon">▶</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
                     <span>Lanjutkan Pelajaran</span>
                 </button>
             </div>

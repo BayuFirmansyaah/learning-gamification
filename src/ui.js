@@ -1,6 +1,7 @@
 import checkpointSystem from './checkpoints.js';
 import player from './player.js';
 import youtubeManager from './youtube.js';
+import { audioSystem } from './audio.js';
 
 class UI {
     constructor() {
@@ -44,6 +45,13 @@ class UI {
 
     // Start the game
     startGame() {
+        // Play click sound
+        audioSystem.playClick();
+        
+        // Start background music
+        audioSystem.playBackgroundMusic();
+        audioSystem.playAmbientCity();
+        
         this.hideStartScreen();
         player.lock();
     }
@@ -65,6 +73,9 @@ class UI {
     // Show learning popup
     showLearningPopup(checkpoint) {
         this.currentCheckpoint = checkpoint;
+        
+        // Play video start sound
+        audioSystem.playVideoStart();
         
         if (this.learningPopup) {
             this.learningPopup.style.display = 'flex';
@@ -116,9 +127,13 @@ class UI {
         if (this.continueButton) {
             this.continueButton.disabled = false;
         }
+        
+        // Play success sound
+        audioSystem.playSuccess();
+        
         if (this.watchProgress) {
             this.watchProgress.classList.add('completed');
-            this.watchProgress.innerHTML = '<p>✅ Video selesai! Klik tombol di bawah untuk melanjutkan</p>';
+            this.watchProgress.innerHTML = '<p><i class="fas fa-check-circle"></i> Video selesai! Klik tombol di bawah untuk melanjutkan</p>';
         }
         if (this.videoProgressFill) {
             this.videoProgressFill.style.width = '100%';

@@ -3,6 +3,8 @@ import buildingsManager from './buildings.js';
 import player from './player.js';
 import ui from './ui.js';
 import assetLoader from './assetLoader.js';
+import dialogSystem from './dialog.js';
+import { audioSystem } from './audio.js';
 
 class CheckpointSystem {
     constructor() {
@@ -12,11 +14,14 @@ class CheckpointSystem {
         this.currentCheckpoint = null;
         this.triggerDistance = 15; // Distance to trigger checkpoint (scaled)
         this.characters = []; // Store character meshes for animation
+        this.useDialogSystem = true; // Enable dialog-based interaction
     }
 
     // Initialize checkpoint system
     init(scene) {
         this.scene = scene;
+        // Initialize dialog system
+        dialogSystem.init(scene);
     }
 
     // Create checkpoints for all buildings
@@ -148,7 +153,7 @@ class CheckpointSystem {
         // Sub text
         context.font = '24px Arial';
         context.fillStyle = '#aaffaa';
-        context.fillText('📚 Klik untuk belajar', 256, 85);
+        context.fillText('Tekan E untuk belajar', 256, 85);
 
         // Create texture from canvas
         const texture = new THREE.CanvasTexture(canvas);
@@ -251,14 +256,44 @@ class CheckpointSystem {
                 }
             });
 
-            // Add character info for animation
-            this.characters.push({
+            // Character animation state
+            const charInfo = {
                 mesh: character,
                 bodyGroup: bodyGroup,
                 armGroup: armGroup,
                 checkpoint: checkpoint,
-                wavePhase: Math.random() * Math.PI * 2, // Random starting phase
-                baseY: 0
+                wavePhase: Math.random() * Math.PI * 2,
+                baseY: 0,
+                animationState: 'idle', // idle, waving, excited, talking
+                stateTime: 0,
+                isNearPlayer: false,
+                jumpVelocity: 0
+            };
+
+            // Add character info for animation
+            this.characters.push(charInfo);
+
+            // Register NPC with dialog system
+            const npcNames = [
+                'Pak Budi', 'Bu Sari', 'Pak Ahmad', 'Bu Dewi',
+                'Pak Eko', 'Bu Fitri', 'Pak Gunawan', 'Bu Hana',
+                'Pak Irwan', 'Bu Jumi', 'Pak Kurnia', 'Bu Linda'
+            ];
+            
+            dialogSystem.registerNPC({
+                id: checkpoint.id,
+                name: npcNames[checkpoint.id % npcNames.length],
+                character: character,
+                checkpoint: checkpoint,
+                position: character.position,
+                charInfo: charInfo,
+                onDialogStart: () => {
+                    charInfo.animationState = 'excited';
+                    charInfo.stateTime = 0;
+                },
+                onStartLearning: () => {
+                    this.triggerCheckpoint(checkpoint);
+                }
             });
 
             this.scene.add(character);
@@ -281,12 +316,15 @@ class CheckpointSystem {
             }
         });
 
-        // Animate characters (waving motion)
+        const playerPos = player.getPosition();
+        const delta = 0.016; // Approximate delta
+
+        // Animate characters with more expressive animations
         this.characters.forEach(charInfo => {
             if (charInfo.checkpoint.completed) {
-                // Hide completed checkpoint characters or make them idle
+                // Completed characters do idle celebration
                 if (charInfo.armGroup) {
-                    charInfo.armGroup.rotation.z = 0;
+                    charInfo.armGroup.rotation.z = Math.sin(time * 2) * 0.2;
                     charInfo.armGroup.rotation.x = 0;
                 }
                 return;
@@ -295,39 +333,155 @@ class CheckpointSystem {
             const character = charInfo.mesh;
             if (!character) return;
 
-            // Body bobbing - excited to greet
-            character.position.y = charInfo.baseY + Math.sin(time * 3 + charInfo.wavePhase) * 0.1;
-            
-            // Body sway
-            if (charInfo.bodyGroup) {
-                charInfo.bodyGroup.rotation.z = Math.sin(time * 2 + charInfo.wavePhase) * 0.05;
+            // Update state time
+            charInfo.stateTime += delta;
+
+            // Check distance to player
+            const distance = playerPos.distanceTo(character.position);
+            const wasNearPlayer = charInfo.isNearPlayer;
+            charInfo.isNearPlayer = distance < 25;
+
+            // Transition to excited when player approaches
+            if (charInfo.isNearPlayer && !wasNearPlayer) {
+                charInfo.animationState = 'waving';
+                charInfo.stateTime = 0;
+            } else if (!charInfo.isNearPlayer && wasNearPlayer) {
+                charInfo.animationState = 'idle';
+                charInfo.stateTime = 0;
+            }
+
+            // Animation based on state
+            switch (charInfo.animationState) {
+                case 'idle':
+                    this.animateIdle(charInfo, time);
+                    break;
+                case 'waving':
+                    this.animateWaving(charInfo, time);
+                    break;
+                case 'excited':
+                    this.animateExcited(charInfo, time, delta);
+                    break;
+                case 'talking':
+                    this.animateTalking(charInfo, time);
+                    break;
             }
             
-            // Arm waving animation - raise and wave
-            if (charInfo.armGroup) {
-                // Raise arm up (rotate backward at shoulder)
-                charInfo.armGroup.rotation.x = -Math.PI * 0.4; // Arm raised
-                // Wave back and forth
-                charInfo.armGroup.rotation.z = Math.sin(time * 8 + charInfo.wavePhase) * 0.5 + 0.3;
+            // Always rotate to face player when nearby
+            if (charInfo.isNearPlayer) {
+                const dx = playerPos.x - character.position.x;
+                const dz = playerPos.z - character.position.z;
+                const targetAngle = Math.atan2(dx, dz);
+                
+                let angleDiff = targetAngle - character.rotation.y;
+                while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                character.rotation.y += angleDiff * 0.05;
             }
-            
-            // Rotate to face player
-            const playerPos = player.getPosition();
-            const dx = playerPos.x - character.position.x;
-            const dz = playerPos.z - character.position.z;
-            const targetAngle = Math.atan2(dx, dz);
-            
-            // Smoothly rotate towards player
-            let angleDiff = targetAngle - character.rotation.y;
-            // Normalize angle
-            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            character.rotation.y += angleDiff * 0.03;
         });
+
+        // Update dialog system
+        dialogSystem.update(time);
+    }
+
+    // Idle animation - subtle breathing and swaying
+    animateIdle(charInfo, time) {
+        const character = charInfo.mesh;
+        const phase = charInfo.wavePhase;
+
+        // Subtle breathing
+        character.position.y = charInfo.baseY + Math.sin(time * 1.5 + phase) * 0.05;
+        
+        // Gentle body sway
+        if (charInfo.bodyGroup) {
+            charInfo.bodyGroup.rotation.z = Math.sin(time * 0.8 + phase) * 0.02;
+        }
+        
+        // Arms at rest
+        if (charInfo.armGroup) {
+            charInfo.armGroup.rotation.x = Math.sin(time * 1.2 + phase) * 0.05;
+            charInfo.armGroup.rotation.z = 0.1;
+        }
+    }
+
+    // Waving animation - enthusiastic greeting
+    animateWaving(charInfo, time) {
+        const character = charInfo.mesh;
+        const phase = charInfo.wavePhase;
+
+        // Excited bouncing
+        character.position.y = charInfo.baseY + Math.sin(time * 4 + phase) * 0.15;
+        
+        // Body lean forward slightly
+        if (charInfo.bodyGroup) {
+            charInfo.bodyGroup.rotation.x = -0.1;
+            charInfo.bodyGroup.rotation.z = Math.sin(time * 3 + phase) * 0.08;
+        }
+        
+        // Enthusiastic arm wave
+        if (charInfo.armGroup) {
+            charInfo.armGroup.rotation.x = -Math.PI * 0.5; // Arm raised high
+            charInfo.armGroup.rotation.z = Math.sin(time * 10 + phase) * 0.6 + 0.3;
+        }
+    }
+
+    // Excited animation - jumping with joy
+    animateExcited(charInfo, time, delta) {
+        const character = charInfo.mesh;
+        const phase = charInfo.wavePhase;
+
+        // Jumping animation
+        if (charInfo.stateTime < 2) {
+            // Rapid jumps
+            const jumpCycle = (time * 6) % (Math.PI * 2);
+            const jumpHeight = Math.max(0, Math.sin(jumpCycle)) * 0.8;
+            character.position.y = charInfo.baseY + jumpHeight;
+            
+            // Both arms up in celebration
+            if (charInfo.armGroup) {
+                charInfo.armGroup.rotation.x = -Math.PI * 0.7;
+                charInfo.armGroup.rotation.z = Math.sin(time * 12) * 0.4;
+            }
+            
+            // Excited body wiggle
+            if (charInfo.bodyGroup) {
+                charInfo.bodyGroup.rotation.z = Math.sin(time * 8) * 0.15;
+                charInfo.bodyGroup.rotation.y = Math.sin(time * 6) * 0.1;
+            }
+        } else {
+            // Transition back to waving
+            charInfo.animationState = 'waving';
+        }
+    }
+
+    // Talking animation - gestures while speaking
+    animateTalking(charInfo, time) {
+        const character = charInfo.mesh;
+        const phase = charInfo.wavePhase;
+
+        // Subtle nodding
+        character.position.y = charInfo.baseY + Math.sin(time * 3) * 0.05;
+        
+        // Head nod simulation through body
+        if (charInfo.bodyGroup) {
+            charInfo.bodyGroup.rotation.x = Math.sin(time * 4) * 0.05 - 0.05;
+            charInfo.bodyGroup.rotation.z = Math.sin(time * 2.5 + phase) * 0.03;
+        }
+        
+        // Gesturing arm movements
+        if (charInfo.armGroup) {
+            charInfo.armGroup.rotation.x = -Math.PI * 0.25 + Math.sin(time * 3) * 0.2;
+            charInfo.armGroup.rotation.z = Math.sin(time * 2) * 0.3 + 0.2;
+        }
     }
 
     // Check if player is in any checkpoint zone
     checkPlayerPosition() {
+        // If using dialog system, don't auto-trigger
+        // Dialog system handles interaction via E key
+        if (this.useDialogSystem) {
+            return null;
+        }
+
         const playerPos = player.getPosition();
         
         for (const checkpoint of this.checkpoints) {

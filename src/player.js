@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import assetLoader from './assetLoader.js';
+import { audioSystem } from './audio.js';
 
 class Player {
     constructor() {
@@ -121,11 +122,11 @@ class Player {
         // Context menu prevention
         domElement.addEventListener('contextmenu', (e) => e.preventDefault());
         
-        // Arrow keys for camera rotation (alternative control)
+        // Q key for camera rotation left (E is reserved for interaction)
         document.addEventListener('keydown', (e) => {
             if (e.code === 'KeyQ') {
                 this.cameraAngle += 0.1;
-            } else if (e.code === 'KeyE') {
+            } else if (e.code === 'KeyR') {
                 this.cameraAngle -= 0.1;
             }
         });
@@ -416,6 +417,9 @@ class Player {
             // Walking animation - faster when sprinting
             const animSpeed = this.isSprinting && this.stamina > 0 ? 18 : 10;
             this.walkTime += delta * animSpeed;
+            
+            // Play footstep sounds
+            audioSystem.updateWalking(true, this.isSprinting && this.stamina > 0);
         }
         
         // Smoothly rotate character (faster rotation)
@@ -514,6 +518,7 @@ class Player {
     // Update stamina
     updateStamina(delta) {
         const isMoving = this.moveForward || this.moveBackward || this.moveLeft || this.moveRight;
+        const wasSprinting = this.isSprinting && this.stamina > 0;
         
         if (this.isSprinting && isMoving) {
             // Drain stamina while sprinting
@@ -521,6 +526,10 @@ class Player {
             if (this.stamina <= 0) {
                 this.stamina = 0;
                 this.isSprinting = false;
+                audioSystem.playStaminaLow();
+            } else if (this.stamina < 20 && this.stamina + this.staminaDrain * delta >= 20) {
+                // Warning when low
+                audioSystem.playStaminaLow();
             }
         } else {
             // Regenerate stamina when not sprinting
@@ -544,7 +553,7 @@ class Player {
             staminaContainer = document.createElement('div');
             staminaContainer.id = 'staminaContainer';
             staminaContainer.innerHTML = `
-                <div class="stamina-label">⚡ STAMINA</div>
+                <div class="stamina-label"><i class="fas fa-bolt"></i> STAMINA</div>
                 <div class="stamina-bar-bg">
                     <div id="staminaBar" class="stamina-bar-fill"></div>
                 </div>

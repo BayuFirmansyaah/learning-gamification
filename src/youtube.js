@@ -101,7 +101,7 @@ class YouTubeManager {
                 top: 0;
                 left: 0;
             ">
-                <div style="font-size: 80px; margin-bottom: 20px; animation: pulse 2s infinite;">🎬</div>
+                <i class="fas fa-play-circle" style="font-size: 80px; margin-bottom: 20px; animation: pulse 2s infinite; color: #4CAF50;"></i>
                 <h3 style="margin-bottom: 10px; font-size: 1.5rem;">Video Pembelajaran</h3>
                 <p style="color: #4CAF50; margin-bottom: 25px; font-size: 1.1rem;">${this.getTopicFromVideoId(videoId)}</p>
                 <div style="
@@ -156,7 +156,7 @@ class YouTubeManager {
             if (elapsed >= totalTime) {
                 clearInterval(this.checkInterval);
                 if (timerEl) {
-                    timerEl.textContent = '✅ Video Selesai!';
+                    timerEl.innerHTML = '<i class="fas fa-check-circle"></i> Video Selesai!';
                     timerEl.style.color = '#4CAF50';
                 }
                 if (this.onEndCallback) {
