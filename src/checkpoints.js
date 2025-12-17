@@ -28,20 +28,69 @@ class CheckpointSystem {
     createCheckpoints() {
         const buildings = buildingsManager.getBuildings();
         
-        // Learning topics for each checkpoint - all use the same YouTube video
+        // Learning topics for each checkpoint with different YouTube videos
+        // Video edukasi matematika Indonesia
         const topics = [
-            { name: 'Pengenalan Bilangan', videoId: 'eQv10AP5BG0' },
-            { name: 'Penjumlahan Dasar', videoId: 'eQv10AP5BG0' },
-            { name: 'Pengurangan Dasar', videoId: 'eQv10AP5BG0' },
-            { name: 'Perkalian', videoId: 'eQv10AP5BG0' },
-            { name: 'Pembagian', videoId: 'eQv10AP5BG0' },
-            { name: 'Pecahan', videoId: 'eQv10AP5BG0' },
-            { name: 'Geometri Dasar', videoId: 'eQv10AP5BG0' },
-            { name: 'Pengukuran', videoId: 'eQv10AP5BG0' },
-            { name: 'Statistika Dasar', videoId: 'eQv10AP5BG0' },
-            { name: 'Aljabar Pengenalan', videoId: 'eQv10AP5BG0' },
-            { name: 'Bilangan Desimal', videoId: 'eQv10AP5BG0' },
-            { name: 'Perbandingan', videoId: 'eQv10AP5BG0' }
+            { 
+                name: 'Pengenalan Bilangan', 
+                videoId: 'kKut-udIKjQ',  // Belajar Mengenal Angka 1-10
+                description: 'Mengenal angka dan bilangan dasar'
+            },
+            { 
+                name: 'Penjumlahan Dasar', 
+                videoId: '4St2K5UX0Qo',  // Belajar Penjumlahan
+                description: 'Cara menjumlahkan bilangan'
+            },
+            { 
+                name: 'Pengurangan Dasar', 
+                videoId: '9H9cC2Q12_o',  // Belajar Pengurangan
+                description: 'Cara mengurangi bilangan'
+            },
+            { 
+                name: 'Perkalian', 
+                videoId: 'p-mPitGvpR0',  // Trik Perkalian Cepat
+                description: 'Teknik perkalian mudah'
+            },
+            { 
+                name: 'Pembagian', 
+                videoId: '5aWiUOF9grI',  // Cara Pembagian
+                description: 'Belajar membagi bilangan'
+            },
+            { 
+                name: 'Pecahan', 
+                videoId: '0hPRfqPFtt8',  // Mengenal Pecahan
+                description: 'Memahami konsep pecahan'
+            },
+            { 
+                name: 'Geometri Dasar', 
+                videoId: 'vulyqB7DTXA',  // Mengenal Bangun Datar
+                description: 'Belajar bentuk geometri'
+            },
+            { 
+                name: 'Pengukuran', 
+                videoId: 'klrfld-aJ6Q',  // Satuan Pengukuran
+                description: 'Memahami satuan ukuran'
+            },
+            { 
+                name: 'Statistika Dasar', 
+                videoId: 'el7Ezn9PpWU',  // Mean, Median, Modus
+                description: 'Pengenalan statistika'
+            },
+            { 
+                name: 'Aljabar Pengenalan', 
+                videoId: 'WsQJAhCU7Q8',  // Pengenalan Aljabar
+                description: 'Dasar-dasar aljabar'
+            },
+            { 
+                name: 'Bilangan Desimal', 
+                videoId: 'aXepez_aRoI',  // Bilangan Desimal
+                description: 'Memahami angka desimal'
+            },
+            { 
+                name: 'Perbandingan', 
+                videoId: 'UkToSBuquHc',  // Perbandingan & Skala
+                description: 'Konsep perbandingan'
+            }
         ];
 
         buildings.forEach((building, index) => {
